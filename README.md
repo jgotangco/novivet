@@ -7,7 +7,7 @@
 [![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Ready-4285F4?logo=google-cloud)](https://cloud.google.com/run)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Architected & Developed by [Jerome Gotangco](https://github.com/jgotangco)**  
+> **Designed and product-directed by [Jerome Gotangco](https://github.com/jgotangco). Developed with Google Antigravity / Gemini.**  
 > An enterprise veterinary clinical management platform tailored for small animal hospitals (canine & feline), designed for deployment on Google Cloud Run and Google Cloud SQL.
 
 ---
@@ -109,10 +109,10 @@ gcloud run deploy novivet \
 
 ---
 
-## 👤 Author
+## 👤 Credits & Attribution
 
-**Jerome Gotangco**  
-- GitHub: [@jgotangco](https://github.com/jgotangco)
+Designed and product-directed by **[Jerome Gotangco](https://github.com/jgotangco)** ([@jgotangco](https://github.com/jgotangco)).  
+Developed with **Google Antigravity / Gemini**.
 
 ---
 

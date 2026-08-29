@@ -173,7 +173,16 @@ export default function AdminLoginPage() {
       </div>
 
       <div className="p-4 sm:p-6 text-center text-xs text-slate-600">
-        NoviVet Cloud Veterinary Clinical Engine • Author: Jerome Gotangco
+        NoviVet Veterinary Clinical Operating System • Designed and product-directed by{" "}
+        <a
+          href="https://github.com/jgotangco"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-slate-400 hover:text-indigo-400 transition underline"
+        >
+          Jerome Gotangco
+        </a>
+        . Developed with Google Antigravity / Gemini.
       </div>
     </div>
   );
