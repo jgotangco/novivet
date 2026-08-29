@@ -191,7 +191,7 @@ class ClinicalDataStore {
   async exportFullBackup(): Promise<NoviVetBackupSnapshot> {
     return {
       version: "1.0.0",
-      developer: "Jerome Gotangco <https://github.com/jgotangco>",
+      developer: "Designed and product-directed by Jerome Gotangco. Developed with Google Antigravity / Gemini.",
       exportedAt: new Date().toISOString(),
       clinicSettings: this.clinicSettings,
       users: this.users,

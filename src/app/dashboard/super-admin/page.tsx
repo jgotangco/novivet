@@ -256,6 +256,23 @@ export default function AdminDashboard() {
           </div>
         </div>
       </form>
+
+      {/* Footer System Attribution */}
+      <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <span>NoviVet Cloud Clinical Engine • PostgreSQL 16 / Cloud SQL</span>
+        <span>
+          Designed and product-directed by{" "}
+          <a
+            href="https://github.com/jgotangco"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-slate-800 hover:underline"
+          >
+            Jerome Gotangco
+          </a>
+          . Developed with Google Antigravity / Gemini.
+        </span>
+      </div>
     </div>
   );
 }

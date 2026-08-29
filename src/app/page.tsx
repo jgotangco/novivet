@@ -181,7 +181,7 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
             >
-              <span>Dev: Jerome Gotangco</span>
+              <span>Jerome Gotangco • Google Antigravity</span>
               <ExternalLink className="w-3 h-3 text-slate-400" />
             </a>
 
@@ -437,7 +437,7 @@ export default function HomePage() {
             <span>© 2026 {clinicSettings.clinicName || "NoviVet Animal Hospital"}.</span>
             <span>•</span>
             <span>
-              Designed & Developed by{" "}
+              Designed and product-directed by{" "}
               <a
                 href="https://github.com/jgotangco"
                 target="_blank"
@@ -446,6 +446,7 @@ export default function HomePage() {
               >
                 Jerome Gotangco
               </a>
+              . Developed with Google Antigravity / Gemini.
             </span>
           </div>
 
