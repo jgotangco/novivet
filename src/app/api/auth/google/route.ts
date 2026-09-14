@@ -17,11 +17,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "idToken is required" }, { status: 401 });
     }
 
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+    if (!googleClientId) {
+      return NextResponse.json(
+        { error: "Google OAuth is not configured on this server (GOOGLE_CLIENT_ID unset)." },
+        { status: 503 }
+      );
+    }
+
     let payload: any;
     try {
       const verifyResult = await jwtVerify(idToken, GOOGLE_JWKS, {
         issuer: ["https://accounts.google.com", "accounts.google.com"],
-        audience: process.env.GOOGLE_CLIENT_ID || undefined,
+        audience: googleClientId,
       });
       payload = verifyResult.payload;
     } catch {

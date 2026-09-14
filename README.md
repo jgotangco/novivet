@@ -12,7 +12,7 @@
 
 > [!WARNING]
 > **CONCEPT & DEMONSTRATION PROTOTYPE ONLY**  
-> NoviVet is an exploratory software concept and UI demo featuring persona shells. It is **NOT intended for real clinical patients**, actual medical decisions, live prescription issuance, or production healthcare operations. All clinical fixtures use mock identities (`@novivet.local` email addresses, `MOCK-` prefixed microchips). Data is held in-memory by default unless a persistent `DATABASE_URL` is configured.
+> NoviVet is an exploratory software concept and UI demo featuring persona shells. It is **NOT intended for real clinical patients**, actual medical decisions, live prescription issuance, or production healthcare operations. All clinical fixtures use mock identities (`@novivet.local` email addresses, `MOCK-` prefixed microchips). Data is held in-memory (`DATABASE_URL` currently does not persist; store is still memory).
 
 ---
 
@@ -72,7 +72,11 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 > [!NOTE]
-> By default in development, if `DATABASE_URL` is unset, NoviVet initializes with in-memory mock data using `@novivet.local` accounts and `MOCK-` microchip identifiers.
+> **Local Development & Demo Credentials**:
+> - **Demo Password**: `DemoPass2026!`
+> - **Station PIN**: `123456`
+> - **Mock Accounts**: All fixture accounts use `@novivet.local` emails (e.g., `doctor@novivet.local`, `nurse@novivet.local`, `staff@novivet.local`, `admin@novivet.local`, `parent@novivet.local`) and `MOCK-` microchip identifiers.
+> - **Data Persistence**: Note that `DATABASE_URL` currently does not persist; the application store is still in-memory.
 
 ---
 
@@ -114,7 +118,7 @@ gcloud run deploy novivet \
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [Lucide Icons](https://lucide.dev/)
 - **Authentication**: JWT Cookie Sessions ([`jose`](https://github.com/panva/jose)), Node scrypt password/PIN hashing, and Google ID token verification
-- **Database & Storage**: In-memory data store by default; PostgreSQL 16 via [Drizzle ORM](https://orm.drizzle.team/) when `DATABASE_URL` is configured
+- **Database & Storage**: In-memory data store (`DATABASE_URL` currently does not persist; unused Drizzle schema)
 - **Testing**: [Vitest](https://vitest.dev/) automated test suite
 
 ---

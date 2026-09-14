@@ -242,12 +242,17 @@ class ClinicalDataStore {
 
   // BACKUP EXPORT & RESTORE
   async exportFullBackup(): Promise<NoviVetBackupSnapshot> {
+    const sanitizedUsers = this.users.map((user) => {
+      const { password_hash, pin_hash, ...sanitized } = user as any;
+      return sanitized as User;
+    });
+
     return {
       version: "1.0.0",
       developer: "Designed and product-directed by Jerome Gotangco. Developed with Google Antigravity / Gemini.",
       exportedAt: new Date().toISOString(),
       clinicSettings: this.clinicSettings,
-      users: this.users,
+      users: sanitizedUsers,
       clinicalServices: this.services,
       themes: this.themes,
       pets: this.pets,
@@ -301,3 +306,7 @@ class ClinicalDataStore {
 }
 
 export const store = new ClinicalDataStore();
+
+export async function exportFullBackup(): Promise<NoviVetBackupSnapshot> {
+  return store.exportFullBackup();
+}
