@@ -90,7 +90,7 @@ export default function HomePage() {
       accent: "text-purple-700 bg-purple-50 border-purple-200",
       badge: "Admin Master",
       name: "System Administrator",
-      email: "admin@novivet.com",
+      email: "admin@novivet.local",
     },
     {
       role: "DOCTOR",
@@ -103,7 +103,7 @@ export default function HomePage() {
       accent: "text-emerald-700 bg-emerald-50 border-emerald-200",
       badge: "SOAP & Vitals",
       name: "Dr. Sarah Chen, DVM",
-      email: "sarah.chen@novivet.com",
+      email: "sarah.chen@novivet.local",
     },
     {
       role: "NURSE",
@@ -116,7 +116,7 @@ export default function HomePage() {
       accent: "text-teal-700 bg-teal-50 border-teal-200",
       badge: "Bedside Ward",
       name: "Elena Gomez, RVT",
-      email: "elena.gomez@novivet.com",
+      email: "elena.gomez@novivet.local",
     },
     {
       role: "STAFF",
@@ -129,7 +129,7 @@ export default function HomePage() {
       accent: "text-amber-700 bg-amber-50 border-amber-200",
       badge: "Operations",
       name: "Marcus Vance",
-      email: "marcus.vance@novivet.com",
+      email: "marcus.vance@novivet.local",
     },
     {
       role: "FUR_PARENT",
@@ -142,7 +142,7 @@ export default function HomePage() {
       accent: "text-indigo-700 bg-indigo-50 border-indigo-200",
       badge: "Pet Passport",
       name: "Emily Watson",
-      email: "emily.watson@gmail.com",
+      email: "emily.watson@novivet.local",
     },
   ];
 

@@ -106,7 +106,7 @@ export default function DoctorLoginPage() {
               </div>
               <div>
                 <p className="leading-none">Dr. Sarah Chen, DVM</p>
-                <span className="text-[10px] text-emerald-200">sarah.chen@novivet.com</span>
+                <span className="text-[10px] text-emerald-200">sarah.chen@novivet.local</span>
               </div>
             </div>
             <span className="text-xs font-mono">1-Click Launch →</span>
@@ -114,7 +114,7 @@ export default function DoctorLoginPage() {
         </div>
 
         <div className="space-y-3">
-          <GoogleSignInButton defaultRole="DOCTOR" defaultEmail="sarah.chen@novivet.com" defaultFullName="Dr. Sarah Chen, DVM" />
+          <GoogleSignInButton label="Sign in with Google" />
           <div className="relative flex items-center justify-center">
             <div className="border-t border-slate-800 w-full" />
             <span className="bg-slate-950 px-3 text-[10px] uppercase font-bold text-slate-500 tracking-wider">
@@ -140,7 +140,7 @@ export default function DoctorLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="sarah.chen@novivet.com"
+                placeholder="sarah.chen@novivet.local"
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500"
               />
             </div>

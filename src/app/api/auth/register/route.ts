@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { store } from "@/db";
-import { setSessionCookie } from "@/lib/auth";
+import { setSessionCookie, sanitizeUser } from "@/lib/auth";
+import { hashPassword } from "@/lib/passwords";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json().catch(() => ({}));
     const { email, fullName, phoneNumber, password } = body;
 
     if (!email || !fullName) {
@@ -16,12 +17,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "An account with this email already exists." }, { status: 409 });
     }
 
+    const passwordHash = password ? await hashPassword(password) : null;
+
     const user = await store.createUser({
       email,
       fullName,
       phoneNumber,
       role: "FUR_PARENT",
-      metadata: { passwordProtected: !!password },
+      password_hash: passwordHash,
+      metadata: {},
     });
 
     await setSessionCookie({
@@ -31,7 +35,7 @@ export async function POST(request: NextRequest) {
       role: user.role as any,
     });
 
-    return NextResponse.json({ success: true, user }, { status: 201 });
+    return NextResponse.json({ success: true, user: sanitizeUser(user) }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

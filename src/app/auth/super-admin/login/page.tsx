@@ -106,7 +106,7 @@ export default function AdminLoginPage() {
               </div>
               <div>
                 <p className="leading-none">System Administrator</p>
-                <span className="text-[10px] text-indigo-200">admin@novivet.com</span>
+                <span className="text-[10px] text-indigo-200">admin@novivet.local</span>
               </div>
             </div>
             <span className="text-xs font-mono">1-Click Launch →</span>
@@ -114,7 +114,7 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="space-y-3">
-          <GoogleSignInButton defaultRole="SUPER_ADMIN" defaultEmail="admin@novivet.com" defaultFullName="System Administrator" />
+          <GoogleSignInButton label="Sign in with Google" />
           <div className="relative flex items-center justify-center">
             <div className="border-t border-slate-800 w-full" />
             <span className="bg-slate-950 px-3 text-[10px] uppercase font-bold text-slate-500 tracking-wider">
@@ -140,7 +140,7 @@ export default function AdminLoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@novivet.com"
+                placeholder="admin@novivet.local"
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500"
               />
             </div>

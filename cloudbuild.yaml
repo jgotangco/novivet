@@ -19,7 +19,6 @@ steps:
       - 'managed'
       - '--port'
       - '8080'
-      - '--allow-unauthenticated'
 images:
   - 'gcr.io/$PROJECT_ID/novivet:$COMMIT_SHA'
   - 'gcr.io/$PROJECT_ID/novivet:latest'

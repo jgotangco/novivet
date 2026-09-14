@@ -1,5 +1,10 @@
 # Software Design Document (SDD): NoviVet (Cat & Dog Clinical Management System)
 
+> [!WARNING]
+> **IMPLEMENTATION STATUS NOTICE**  
+> **Firebase, 2FA, FastAPI, Cloud Armor, GCS, and Cloud Tasks are NOT implemented.**  
+> This design document specifies target architecture concepts. The actual codebase is an interactive Next.js 14 concept demo with persona shells, Jose cookie sessions, and an in-memory data store (with optional Drizzle PostgreSQL connection).
+
 **Project Name:** NoviVet  
 **Target Platform:** Google Cloud Run (Containerized Microservices / Full-Stack Next.js + FastAPI)  
 **Database:** Google Cloud SQL (PostgreSQL 16) + Cloud Storage for Medical Assets  

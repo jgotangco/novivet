@@ -1,5 +1,26 @@
+import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
+import * as schema from "./schema";
 import { mockUsers, mockClinicSettings, mockThemes, mockPets, mockVisits, mockImmunizations, mockProcedures, mockHospitalizations, mockInventory, mockEquipment, mockClinicalServices, mockVouchers, mockCommunications } from "./mock-data";
 import { User, Pet, ClinicSettings, ClinicTheme } from "./schema";
+
+const isProduction = process.env.NODE_ENV === "production" || !!process.env.K_SERVICE;
+const databaseUrl = process.env.DATABASE_URL;
+
+let dbClient: ReturnType<typeof postgres> | null = null;
+export let db: ReturnType<typeof drizzle> | null = null;
+
+if (databaseUrl) {
+  dbClient = postgres(databaseUrl);
+  db = drizzle(dbClient, { schema });
+} else if (isProduction) {
+  throw new Error("DATABASE_URL environment variable is required in production mode");
+} else {
+  if (!(globalThis as any).__NOVIVET_MEMORY_STORE_WARNED) {
+    console.warn("⚠️ Warning: DATABASE_URL is not set. NoviVet is running with in-memory store.");
+    (globalThis as any).__NOVIVET_MEMORY_STORE_WARNED = true;
+  }
+}
 
 export interface NoviVetBackupSnapshot {
   version: string;
@@ -51,11 +72,14 @@ class ClinicalDataStore {
 
   async createUser(data: Partial<User>): Promise<User> {
     const newUser: User = {
-      id: data.id || `usr-${Date.now()}`,
+      id: data.id || crypto.randomUUID(),
       email: data.email || "",
       fullName: data.fullName || "",
       phoneNumber: data.phoneNumber || "",
       role: data.role || "FUR_PARENT",
+      password_hash: data.password_hash || null,
+      pin_hash: data.pin_hash || null,
+      pin_locked_until: data.pin_locked_until || null,
       metadata: data.metadata || {},
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -70,6 +94,23 @@ class ClinicalDataStore {
       user.role = newRole;
       user.updatedAt = new Date();
     }
+    return user;
+  }
+
+  async recordPinFailure(user: User): Promise<User> {
+    const attempts = ((user as any).pin_failed_attempts || 0) + 1;
+    (user as any).pin_failed_attempts = attempts;
+    if (attempts >= 5) {
+      user.pin_locked_until = new Date(Date.now() + 15 * 60 * 1000);
+    }
+    user.updatedAt = new Date();
+    return user;
+  }
+
+  async resetPinFailures(user: User): Promise<User> {
+    (user as any).pin_failed_attempts = 0;
+    user.pin_locked_until = null;
+    user.updatedAt = new Date();
     return user;
   }
 
@@ -119,9 +160,12 @@ class ClinicalDataStore {
   }
 
   async createPet(data: Partial<Pet>): Promise<Pet> {
+    if (!data.ownerId) {
+      throw new Error("ownerId is required to create a pet");
+    }
     const newPet: Pet = {
-      id: data.id || `pet-${Date.now()}`,
-      ownerId: data.ownerId || this.users[0]?.id,
+      id: data.id || crypto.randomUUID(),
+      ownerId: data.ownerId,
       name: data.name || "Unnamed Pet",
       species: data.species || "CANINE",
       breed: data.breed || "Mixed",
@@ -180,6 +224,15 @@ class ClinicalDataStore {
   // VISITS
   async getVisits(): Promise<any[]> {
     return this.visits;
+  }
+
+  // HOSPITALIZATIONS
+  async getHospitalizations(): Promise<any[]> {
+    return this.hospitalizations;
+  }
+
+  async getActiveHospitalizations(): Promise<any[]> {
+    return this.hospitalizations;
   }
 
   // VOUCHERS

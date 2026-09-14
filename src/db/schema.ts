@@ -13,12 +13,17 @@ export const users = pgTable("users", {
   fullName: varchar("full_name", { length: 255 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 50 }),
   role: userRoleEnum("role").notNull().default("FUR_PARENT"),
+  password_hash: text("password_hash"),
+  pin_hash: text("pin_hash"),
+  pin_locked_until: timestamp("pin_locked_until"),
   metadata: jsonb("metadata").$type<{
     specialty?: string;
     licenseNumber?: string;
-    stationPin?: string;
     preferredLanguage?: string;
     emergencyContact?: string;
+    avatarUrl?: string;
+    googleId?: string;
+    provider?: string;
   }>().default({}),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

@@ -1,19 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireRole } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  const host = request.headers.get("host") || "localhost:3000";
-  const isLocalHost = host.includes("localhost") || host.includes("127.0.0.1");
+  const authResult = await requireRole(["SUPER_ADMIN"], request);
+  if (authResult instanceof NextResponse) {
+    return authResult;
+  }
+
   const isKService = !!process.env.K_SERVICE;
-  const isProduction = isKService || (!isLocalHost && process.env.NODE_ENV === "production");
-  const isLocal = !isProduction;
+  const isProduction = isKService || process.env.NODE_ENV === "production";
 
   return NextResponse.json({
-    isLocal,
+    isLocal: !isProduction,
     isProduction,
-    platform: isKService ? `Google Cloud Run (${process.env.K_SERVICE})` : isLocalHost ? "Local Workstation" : "Linux / VM Deployment",
-    database: process.env.DATABASE_URL?.includes("localhost") ? "PostgreSQL 16 (Local Dual Store)" : "Google Cloud SQL (PostgreSQL 16)",
+    platform: isKService ? "Google Cloud Run" : "Standard Server / Container",
+    database: process.env.DATABASE_URL ? "PostgreSQL (Drizzle Connected)" : "In-Memory Data Store",
     nodeEnv: process.env.NODE_ENV || "development",
-    port: process.env.PORT || "8080 / 3000",
-    host,
+    port: process.env.PORT || "8080",
   });
 }

@@ -25,7 +25,7 @@ export default async function PetHistoryPage({ params }: { params: { id: string 
               className="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-500 shadow-md"
             />
             <div>
-              <h1 className="text-2xl font-black text-slate-900">{pet.name}'s Medical History</h1>
+              <h1 className="text-2xl font-black text-slate-900">{pet.name}&apos;s Medical History</h1>
               <p className="text-xs text-slate-500">{pet.species} • {pet.breed} • Microchip: {pet.microchipId || "N/A"}</p>
             </div>
           </div>

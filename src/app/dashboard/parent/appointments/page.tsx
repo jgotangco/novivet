@@ -17,7 +17,7 @@ export default function ParentAppointmentsPage() {
         </div>
         <h3 className="font-bold text-base text-slate-900">No Pending Appointments</h3>
         <p className="text-xs text-slate-500 max-w-md mx-auto">
-          Contact our 24/7 hospital desk or book online for your pet's next annual wellness check.
+          Contact our 24/7 hospital desk or book online for your pet&apos;s next annual wellness check.
         </p>
       </div>
     </div>
