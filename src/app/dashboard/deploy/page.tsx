@@ -82,7 +82,6 @@ export default function DeployGuidePage() {
             <p>  --image gcr.io/$PROJECT_ID/novivet:latest \</p>
             <p>  --region asia-southeast1 \</p>
             <p>  --platform managed \</p>
-            <p>  --allow-unauthenticated \</p>
             <p>  --port 8080</p>
           </div>
         </div>

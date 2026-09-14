@@ -2,58 +2,114 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "novivet-super-secure-production-clinical-jwt-secret-key-2026"
-);
-
 const SESSION_COOKIE = "novivet_session";
+
+// Public API endpoints that do not require an active JWT session cookie
+const PUBLIC_API_PREFIXES = [
+  "/api/auth/login",
+  "/api/auth/register",
+  "/api/auth/logout",
+  "/api/auth/google",
+  "/api/auth/demo-login",
+  "/api/cron/",
+];
 
 const ROUTE_ROLE_MAP: { prefix: string; allowedRoles: string[]; loginPath: string }[] = [
   {
+    prefix: "/dashboard/super-admin",
+    allowedRoles: ["SUPER_ADMIN"],
+    loginPath: "/auth/super-admin/login",
+  },
+  {
+    prefix: "/dashboard/deploy",
+    allowedRoles: ["SUPER_ADMIN"],
+    loginPath: "/auth/super-admin/login",
+  },
+  {
+    prefix: "/deploy",
+    allowedRoles: ["SUPER_ADMIN"],
+    loginPath: "/auth/super-admin/login",
+  },
+  {
     prefix: "/dashboard/doctor",
-    allowedRoles: ["DOCTOR"],
+    allowedRoles: ["DOCTOR", "SUPER_ADMIN"],
     loginPath: "/auth/doctor/login",
   },
   {
     prefix: "/dashboard/nurse",
-    allowedRoles: ["NURSE"],
+    allowedRoles: ["NURSE", "SUPER_ADMIN"],
     loginPath: "/auth/nurse/login",
   },
   {
     prefix: "/dashboard/staff",
-    allowedRoles: ["STAFF"],
+    allowedRoles: ["STAFF", "SUPER_ADMIN"],
     loginPath: "/auth/staff/login",
   },
   {
     prefix: "/dashboard/parent",
-    allowedRoles: ["FUR_PARENT"],
+    allowedRoles: ["FUR_PARENT", "SUPER_ADMIN"],
     loginPath: "/auth/parent/login",
   },
 ];
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const matchedRule = ROUTE_ROLE_MAP.find((rule) => pathname.startsWith(rule.prefix));
+  const token = request.cookies.get(SESSION_COOKIE)?.value;
 
-  if (!matchedRule) {
+  // Handle API routes
+  if (pathname.startsWith("/api/")) {
+    const isPublic = PUBLIC_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+    if (isPublic) {
+      return NextResponse.next();
+    }
+
+    if (!token || !process.env.JWT_SECRET) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    try {
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      await jwtVerify(token, secret);
+      return NextResponse.next();
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  }
+
+  // Handle /deploy and /dashboard/:path*
+  const isProtectedPage = pathname.startsWith("/dashboard") || pathname.startsWith("/deploy");
+  if (!isProtectedPage) {
     return NextResponse.next();
   }
 
-  const token = request.cookies.get(SESSION_COOKIE)?.value;
+  if (!token || !process.env.JWT_SECRET) {
+    const loginPath = pathname.startsWith("/dashboard/super-admin") || pathname.startsWith("/deploy") || pathname.startsWith("/dashboard/deploy")
+      ? "/auth/super-admin/login"
+      : pathname.startsWith("/dashboard/doctor")
+      ? "/auth/doctor/login"
+      : pathname.startsWith("/dashboard/nurse")
+      ? "/auth/nurse/login"
+      : pathname.startsWith("/dashboard/staff")
+      ? "/auth/staff/login"
+      : "/auth/parent/login";
 
-  if (!token) {
-    const loginUrl = new URL(matchedRule.loginPath, request.url);
+    const loginUrl = new URL(loginPath, request.url);
     loginUrl.searchParams.set("from", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const { payload } = await jwtVerify(token, secret);
     const userRole = payload.role as string;
 
-    if (!matchedRule.allowedRoles.includes(userRole)) {
+    const matchedRule = ROUTE_ROLE_MAP.find((rule) => pathname.startsWith(rule.prefix));
+
+    if (matchedRule && !matchedRule.allowedRoles.includes(userRole)) {
       const targetDashboard =
-        userRole === "DOCTOR"
+        userRole === "SUPER_ADMIN"
+          ? "/dashboard/super-admin"
+          : userRole === "DOCTOR"
           ? "/dashboard/doctor"
           : userRole === "NURSE"
           ? "/dashboard/nurse"
@@ -65,8 +121,8 @@ export async function middleware(request: NextRequest) {
     }
 
     return NextResponse.next();
-  } catch (err) {
-    const loginUrl = new URL(matchedRule.loginPath, request.url);
+  } catch {
+    const loginUrl = new URL("/auth/parent/login", request.url);
     loginUrl.searchParams.set("from", pathname);
     return NextResponse.redirect(loginUrl);
   }
@@ -74,9 +130,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/doctor/:path*",
-    "/dashboard/nurse/:path*",
-    "/dashboard/staff/:path*",
-    "/dashboard/parent/:path*",
+    "/dashboard/:path*",
+    "/api/:path*",
+    "/deploy",
+    "/deploy/:path*",
   ],
 };

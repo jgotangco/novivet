@@ -84,7 +84,10 @@ export default function AdminDashboard() {
   const handlePurgeMockData = async () => {
     if (!confirm("Are you sure you want to purge all sandbox and mock records for production?")) return;
     try {
-      const res = await fetch("/api/admin/purge-mock-data", { method: "POST" });
+      const res = await fetch("/api/admin/purge-mock-data", {
+        method: "POST",
+        headers: { "x-confirm-action": "confirm" },
+      });
       const data = await res.json();
       if (data.success) {
         alert("Mock data purged successfully. Hospital is now in fresh production state.");

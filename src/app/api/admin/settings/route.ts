@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { store } from "@/db";
-import { getCurrentSession } from "@/lib/auth";
+import { requireRole } from "@/lib/auth";
 
 export async function GET() {
   const settings = await store.getClinicSettings();
@@ -9,9 +9,9 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
-  const session = await getCurrentSession();
-  if (!session || (session.role !== "SUPER_ADMIN" && session.role !== "STAFF")) {
-    return NextResponse.json({ error: "Unauthorized. Only clinic administrators can update vital settings." }, { status: 403 });
+  const authResult = await requireRole(["SUPER_ADMIN"], request);
+  if (authResult instanceof NextResponse) {
+    return authResult;
   }
 
   try {

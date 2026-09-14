@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateWithPassword, authenticateWithPin, setSessionCookie } from "@/lib/auth";
+import { authenticateWithPassword, authenticateWithPin, setSessionCookie, sanitizeUser } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { email, password, pin } = body;
+    const body = await request.json().catch(() => ({}));
+    const { email, password, pin, role } = body;
 
     let user = null;
 
-    if (pin) {
-      user = await authenticateWithPin(pin);
-      if (!user) {
-        return NextResponse.json({ error: "Invalid Station PIN code." }, { status: 401 });
+    if (pin !== undefined && pin !== null) {
+      const pinResult = await authenticateWithPin(String(pin), { email, role });
+      if (!pinResult.user) {
+        return NextResponse.json(
+          { error: pinResult.error || "Invalid Station PIN code." },
+          { status: 401 }
+        );
       }
+      user = pinResult.user;
     } else if (email && password) {
       user = await authenticateWithPassword(email, password);
       if (!user) {
@@ -31,7 +35,10 @@ export async function POST(request: NextRequest) {
       isSuperAdmin: user.role === "SUPER_ADMIN",
     });
 
-    return NextResponse.json({ success: true, user });
+    return NextResponse.json({
+      success: true,
+      user: sanitizeUser(user),
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

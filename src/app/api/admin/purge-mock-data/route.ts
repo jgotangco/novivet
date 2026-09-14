@@ -1,11 +1,24 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { store } from "@/db";
-import { getCurrentSession } from "@/lib/auth";
+import { requireRole } from "@/lib/auth";
 
-export async function POST() {
-  const session = await getCurrentSession();
-  if (!session || session.role !== "SUPER_ADMIN") {
-    return NextResponse.json({ error: "Unauthorized. Super Admin privileges required." }, { status: 403 });
+export async function POST(request: NextRequest) {
+  const authResult = await requireRole(["SUPER_ADMIN"], request);
+  if (authResult instanceof NextResponse) {
+    return authResult;
+  }
+
+  // Enforce confirmation header
+  const confirmHeader =
+    request.headers.get("x-confirm-action") ||
+    request.headers.get("x-confirm") ||
+    request.headers.get("x-confirm-purge");
+
+  if (confirmHeader !== "confirm" && confirmHeader !== "true") {
+    return NextResponse.json(
+      { error: "Confirmation header required (e.g. x-confirm-action: confirm or x-confirm: true)." },
+      { status: 400 }
+    );
   }
 
   try {

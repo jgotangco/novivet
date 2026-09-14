@@ -88,7 +88,7 @@ export default function NurseLoginPage() {
               <span>1-Click Demo Nurse</span>
             </div>
             <span className="text-[10px] font-mono uppercase bg-teal-950 text-teal-300 px-2 py-0.5 rounded border border-teal-800">
-              PIN: 5678
+              PIN: 123456
             </span>
           </div>
 
@@ -104,7 +104,7 @@ export default function NurseLoginPage() {
               </div>
               <div>
                 <p className="leading-none">Elena Gomez, RVT</p>
-                <span className="text-[10px] text-teal-200">elena.gomez@novivet.com</span>
+                <span className="text-[10px] text-teal-200">elena.gomez@novivet.local</span>
               </div>
             </div>
             <span className="text-xs font-mono">1-Click Launch →</span>
@@ -112,7 +112,7 @@ export default function NurseLoginPage() {
         </div>
 
         <div className="space-y-3">
-          <GoogleSignInButton defaultRole="NURSE" defaultEmail="elena.gomez@novivet.com" defaultFullName="Elena Gomez, RVT" />
+          <GoogleSignInButton label="Sign in with Google" />
         </div>
 
         <div className="bg-slate-900 rounded-3xl border border-slate-800 p-6 space-y-4 shadow-xl">
@@ -124,18 +124,18 @@ export default function NurseLoginPage() {
           )}
 
           <div className="space-y-3">
-            <label className="block text-center text-xs font-bold text-slate-300">Enter Station PIN</label>
+            <label className="block text-center text-xs font-bold text-slate-300">Enter 6-Digit Station PIN</label>
             <div className="flex justify-center">
               <input
                 type="password"
-                maxLength={4}
+                maxLength={6}
                 value={pin}
                 onChange={(e) => {
                   setPin(e.target.value);
-                  if (e.target.value.length === 4) handlePinSubmit(e.target.value);
+                  if (e.target.value.length === 6) handlePinSubmit(e.target.value);
                 }}
-                placeholder="••••"
-                className="w-40 text-center text-2xl tracking-[0.5em] bg-slate-950 border border-slate-800 rounded-2xl py-3 text-white font-mono focus:outline-none focus:border-teal-500"
+                placeholder="••••••"
+                className="w-48 text-center text-2xl tracking-[0.4em] bg-slate-950 border border-slate-800 rounded-2xl py-3 text-white font-mono focus:outline-none focus:border-teal-500"
               />
             </div>
           </div>
